@@ -3,49 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Cache-Cache Géant</title>
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
+
 <body>
 
-    <div id="menu">
-        <h1>Cache-Cache Géant</h1>
+<div id="menu">
 
-        <button id="createGame">Créer une partie</button>
-        <button id="joinGame">Rejoindre une partie</button>
-    </div>
+    <h1>Cache-Cache Géant</h1>
 
-    <div id="map"></div>
+    <input type="text" id="playerName" placeholder="Ton pseudo">
 
-    <!-- Leaflet -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <br><br>
 
-<script type="module">
+    <button id="createGame">
+        Créer une partie
+    </button>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    <br><br>
 
-const firebaseConfig = {
+    <input type="text" id="gameCode"
+    placeholder="Code de partie">
 
-    apiKey: "AIzaSyD8rwcguwvHlm55Ecf7RIShILc4T9t8Aik",
-    authDomain: "cache-cache-geant-2d831.firebaseapp.com",
-    projectId: "cache-cache-geant-2d831",
-    storageBucket: "cache-cache-geant-2d831.firebasestorage.app",
-    messagingSenderId: "5562537953",
-    appId: "1:5562537953:web:2ebb1ad4299519200224a0"
+    <button id="joinGame">
+        Rejoindre
+    </button>
 
-};
+    <br><br>
 
-const app = initializeApp(firebaseConfig);
+    <div id="info"></div>
 
-console.log("Firebase connecté");
+</div>
 
-</script>
+<div id="map"></div>
 
-    <script src="script.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="game.js"></script>
 
 </body>
 </html>
