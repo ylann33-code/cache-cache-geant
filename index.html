@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>Cache Cache Géant</title>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css">
@@ -15,6 +18,18 @@ href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 
 <body>
+
+<div id="topBar">
+
+<div id="gameStatus">
+Lobby
+</div>
+
+<div id="timer">
+00:00
+</div>
+
+</div>
 
 <div id="menu">
 
@@ -48,21 +63,33 @@ placeholder="Code partie">
 Rejoindre
 </button>
 
-<br><br>
+</div>
+
+<div id="lobbyPanel">
+
+<h2>Joueurs</h2>
+
+<div id="playersList"></div>
 
 <button id="startGame">
 Démarrer partie
 </button>
 
-<div id="info"></div>
-
 </div>
 
 <div id="map"></div>
 
+<button id="foundButton">
+J’ai été trouvé
+</button>
+
+<div id="countdown">
+5
+</div>
+
 <div id="eliminatedScreen">
 
-<h1>ÉLIMINÉ</h1>
+<h1>SPECTATEUR</h1>
 
 </div>
 
