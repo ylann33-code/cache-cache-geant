@@ -1,52 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>Cache-Cache Géant</title>
+<title>Cache Cache Géant</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-    <link rel="stylesheet"
-    href="https://unpkg.com/leaflet/dist/leaflet.css">
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css">
+
 </head>
 
 <body>
 
 <div id="menu">
 
-    <h1>Cache-Cache Géant</h1>
+<h1>Cache Cache Géant</h1>
 
-    <input type="text" id="playerName" placeholder="Ton pseudo">
+<input
+id="playerName"
+placeholder="Pseudo">
 
-    <br><br>
+<br><br>
 
-    <button id="createGame">
-        Créer une partie
-    </button>
+<input
+id="radiusInput"
+type="number"
+value="1000"
+placeholder="Rayon">
 
-    <br><br>
+<br><br>
 
-    <input type="text" id="gameCode"
-    placeholder="Code de partie">
+<button id="createGame">
+Créer une partie
+</button>
 
-    <button id="joinGame">
-        Rejoindre
-    </button>
+<br><br>
 
-    <br><br>
+<input
+id="gameCode"
+placeholder="Code partie">
 
-    <div id="info"></div>
+<button id="joinGame">
+Rejoindre
+</button>
+
+<br><br>
+
+<button id="startGame">
+Démarrer partie
+</button>
+
+<div id="info"></div>
 
 </div>
 
 <div id="map"></div>
 
+<div id="eliminatedScreen">
+
+<h1>ÉLIMINÉ</h1>
+
+</div>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script type="module" src="firebase.js"></script>
-<script type="module" src="game.js"></script>
+<script type="module"
+src="firebase.js"></script>
+
+<script type="module"
+src="game.js"></script>
 
 </body>
 </html>
