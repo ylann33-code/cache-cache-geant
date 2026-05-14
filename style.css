@@ -1,27 +1,38 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: white;
+body{
+    margin:0;
+    font-family:Arial;
+    background:#111;
+    color:white;
 }
 
-#menu {
-    padding: 15px;
-    background: #222;
-    text-align: center;
+#menu{
+    background:#222;
+    padding:15px;
+    text-align:center;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    background: #00aaee;
-    color: white;
-    border-radius: 8px;
-    font-size: 16px;
+input{
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    width:220px;
 }
 
-#map {
-    width: 100%;
-    height: calc(100vh - 120px);
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#0099ff;
+    color:white;
+    font-size:16px;
+}
+
+#map{
+    width:100%;
+    height:calc(100vh - 250px);
+}
+
+#info{
+    margin-top:10px;
+    font-size:18px;
 }
