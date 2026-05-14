@@ -24,6 +24,27 @@
     <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyD8rwcguwvHlm55Ecf7RIShILc4T9t8Aik",
+    authDomain: "cache-cache-geant-2d831.firebaseapp.com",
+    projectId: "cache-cache-geant-2d831",
+    storageBucket: "cache-cache-geant-2d831.firebasestorage.app",
+    messagingSenderId: "5562537953",
+    appId: "1:5562537953:web:2ebb1ad4299519200224a0"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+console.log("Firebase connecté");
+
+</script>
+
     <script src="script.js"></script>
 
 </body>
