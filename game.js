@@ -11,18 +11,24 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let map;
+
 let zoneCircle;
 
 let currentGame = null;
 let currentPlayer = null;
-let currentRole = null;
 
-let started = false;
+let myRole = "cacheur";
+
+let isAdmin = false;
 
 let markers = {};
 
-const info =
-document.getElementById("info");
+let gamePhase = "lobby";
+
+const playersList =
+document.getElementById(
+"playersList"
+);
 
 map = L.map('map')
 .setView([48.8566,2.3522],13);
@@ -45,6 +51,10 @@ document.getElementById(
 document.getElementById(
 "startGame"
 ).onclick = startGame;
+
+document.getElementById(
+"foundButton"
+).onclick = foundMe;
 
 function randomCode(){
 
@@ -73,15 +83,16 @@ document.getElementById(
 );
 
 if(pseudo == ""){
-alert("Pseudo invalide");
 return;
 }
 
-navigator.geolocation.getCurrentPosition(
+navigator.geolocation
+.getCurrentPosition(
 
 async position=>{
 
-const code = randomCode();
+const code =
+randomCode();
 
 const radius =
 parseInt(
@@ -92,7 +103,8 @@ document.getElementById(
 
 currentGame = code;
 currentPlayer = pseudo;
-currentRole = "admin";
+
+isAdmin = true;
 
 const lat =
 position.coords.latitude;
@@ -105,9 +117,11 @@ ref(db,"games/"+code),
 {
 admin:pseudo,
 
-started:false,
+phase:"lobby",
 
 radius:radius,
+
+hideTime:300,
 
 center:{
 lat:lat,
@@ -116,19 +130,22 @@ lng:lng
 }
 );
 
-await addPlayer(lat,lng);
+await addPlayer(
+lat,
+lng,
+"cacheur",
+true
+);
 
-info.innerHTML =
-"Code : "+code;
+document.getElementById(
+"menu"
+).style.display =
+"none";
 
 listenGame();
 
 startGPS();
 
-},
-
-()=>{
-alert("GPS refusé");
 }
 
 );
@@ -151,43 +168,32 @@ document.getElementById(
 .toUpperCase();
 
 if(pseudo == ""){
-alert("Pseudo invalide");
 return;
 }
 
 const snapshot =
 await get(
-ref(db,
-"games/"+code
-)
+ref(db,"games/"+code)
 );
 
 if(!snapshot.exists()){
-
 alert("Partie inexistante");
 return;
-
 }
 
 const players =
 snapshot.val().players || {};
 
 if(players[pseudo]){
-
-alert("Pseudo déjà utilisé");
+alert("Pseudo déjà pris");
 return;
-
 }
 
 currentGame = code;
 currentPlayer = pseudo;
 
-currentRole =
-prompt(
-"Role : cacheur ou chercheur"
-);
-
-navigator.geolocation.getCurrentPosition(
+navigator.geolocation
+.getCurrentPosition(
 
 async position=>{
 
@@ -197,23 +203,34 @@ position.coords.latitude;
 const lng =
 position.coords.longitude;
 
-await addPlayer(lat,lng);
+await addPlayer(
+lat,
+lng,
+"cacheur",
+false
+);
+
+document.getElementById(
+"menu"
+).style.display =
+"none";
 
 listenGame();
 
 startGPS();
 
-},
-
-()=>{
-alert("GPS refusé");
 }
 
 );
 
 }
 
-async function addPlayer(lat,lng){
+async function addPlayer(
+lat,
+lng,
+role,
+admin
+){
 
 await set(
 ref(
@@ -224,14 +241,16 @@ db,
 {
 name:currentPlayer,
 
-role:currentRole,
+role:role,
+
+admin:admin,
 
 lat:lat,
 lng:lng,
 
 eliminated:false,
 
-lastUpdate:Date.now()
+spectator:false
 }
 );
 
@@ -239,22 +258,85 @@ lastUpdate:Date.now()
 
 async function startGame(){
 
-if(currentRole != "admin"){
+if(!isAdmin){
 return;
 }
 
 await update(
 ref(db,"games/"+currentGame),
 {
-started:true
+phase:"countdown"
 }
 );
+
+startCountdown();
+
+}
+
+async function startCountdown(){
+
+let count = 5;
+
+const div =
+document.getElementById(
+"countdown"
+);
+
+div.style.display =
+"flex";
+
+const interval =
+setInterval(async()=>{
+
+div.innerHTML = count;
+
+count--;
+
+if(count < 0){
+
+clearInterval(interval);
+
+div.style.display =
+"none";
+
+await update(
+ref(db,"games/"+currentGame),
+{
+phase:"hiding",
+
+startTime:Date.now()
+}
+);
+
+startHideTimer();
+
+}
+
+},1000);
+
+}
+
+async function startHideTimer(){
+
+setTimeout(async()=>{
+
+await update(
+ref(db,"games/"+currentGame),
+{
+phase:"playing",
+
+playTime:Date.now()
+}
+);
+
+},300000);
 
 }
 
 function startGPS(){
 
-navigator.geolocation.watchPosition(
+navigator.geolocation
+.watchPosition(
 
 async position=>{
 
@@ -272,8 +354,7 @@ db,
 ),
 {
 lat:lat,
-lng:lng,
-lastUpdate:Date.now()
+lng:lng
 }
 );
 
@@ -306,12 +387,135 @@ if(!game){
 return;
 }
 
-started = game.started;
+gamePhase =
+game.phase;
+
+updateUI(game);
 
 updateMap(game);
 
 }
 
+);
+
+}
+
+function updateUI(game){
+
+document.getElementById(
+"gameStatus"
+).innerHTML =
+game.phase;
+
+const players =
+game.players || {};
+
+playersList.innerHTML = "";
+
+for(let id in players){
+
+const player =
+players[id];
+
+const div =
+document.createElement("div");
+
+div.className =
+"playerCard";
+
+div.innerHTML =
+player.name+
+" - "+
+player.role;
+
+if(isAdmin){
+
+const cacheur =
+document.createElement(
+"button"
+);
+
+cacheur.innerHTML =
+"Cacheur";
+
+cacheur.className =
+"roleButton";
+
+cacheur.onclick = ()=>{
+
+changeRole(
+player.name,
+"cacheur"
+);
+
+};
+
+const chercheur =
+document.createElement(
+"button"
+);
+
+chercheur.innerHTML =
+"Chercheur";
+
+chercheur.className =
+"roleButton";
+
+chercheur.onclick = ()=>{
+
+changeRole(
+player.name,
+"chercheur"
+);
+
+};
+
+div.appendChild(cacheur);
+
+div.appendChild(chercheur);
+
+}
+
+playersList
+.appendChild(div);
+
+}
+
+if(
+myRole == "cacheur" &&
+game.phase == "playing"
+){
+
+document.getElementById(
+"foundButton"
+).style.display =
+"block";
+
+}else{
+
+document.getElementById(
+"foundButton"
+).style.display =
+"none";
+
+}
+
+}
+
+async function changeRole(
+player,
+role
+){
+
+await update(
+ref(
+db,
+"games/"+currentGame+
+"/players/"+player
+),
+{
+role:role
+}
 );
 
 }
@@ -346,9 +550,13 @@ center.lng
 ],
 {
 radius:radius,
-color:'blue'
+color:"blue"
 }
 ).addTo(map);
+
+map.fitBounds(
+zoneCircle.getBounds()
+);
 
 const players =
 game.players || {};
@@ -370,21 +578,21 @@ currentPlayer;
 
 const sameRole =
 player.role ==
-currentRole;
+myRole;
 
-const isAdmin =
-currentRole ==
-"admin";
+const spectator =
+player.spectator;
 
 if(
 !isMe &&
 !sameRole &&
+!spectator &&
 !isAdmin
 ){
 continue;
 }
 
-let color = "blue";
+let color = "gray";
 
 if(player.role ==
 "cacheur"){
@@ -396,11 +604,6 @@ if(player.role ==
 color = "red";
 }
 
-if(player.role ==
-"admin"){
-color = "yellow";
-}
-
 const marker =
 L.circleMarker(
 [
@@ -408,24 +611,20 @@ player.lat,
 player.lng
 ],
 {
-radius:10,
+radius:8,
 color:color
 }
 ).addTo(map);
 
-marker.bindPopup(
-player.name+
-" ("+
-player.role+
-")"
+marker.bindTooltip(
+player.name,
+{
+permanent:true,
+direction:"top"
+}
 );
 
 markers[id] = marker;
-
-if(
-player.name ==
-currentPlayer
-){
 
 checkElimination(
 player,
@@ -437,15 +636,21 @@ radius
 
 }
 
-}
-
 function checkElimination(
 player,
 center,
 radius
 ){
 
-if(!started){
+if(
+player.name !=
+currentPlayer
+){
+return;
+}
+
+if(gamePhase !=
+"playing"){
 return;
 }
 
@@ -463,13 +668,19 @@ center.lng
 
 if(distance > radius){
 
-eliminatePlayer();
+becomeSpectator();
 
 }
 
 }
 
-async function eliminatePlayer(){
+async function foundMe(){
+
+await becomeSpectator();
+
+}
+
+async function becomeSpectator(){
 
 await update(
 ref(
@@ -478,7 +689,8 @@ db,
 "/players/"+currentPlayer
 ),
 {
-eliminated:true
+eliminated:true,
+spectator:true
 }
 );
 
