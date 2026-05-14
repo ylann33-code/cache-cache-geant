@@ -1,50 +1,98 @@
 body{
-    margin:0;
-    font-family:Arial;
-    background:#111;
-    color:white;
+margin:0;
+font-family:Arial;
+background:#111;
+color:white;
+overflow:hidden;
+}
+
+#topBar{
+height:60px;
+background:#222;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 20px;
+font-size:22px;
 }
 
 #menu{
-    background:#222;
-    padding:15px;
-    text-align:center;
+padding:20px;
+text-align:center;
+background:#1a1a1a;
 }
 
 input{
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    width:220px;
+padding:10px;
+border:none;
+border-radius:8px;
+width:220px;
 }
 
 button{
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    background:#0099ff;
-    color:white;
-    font-size:16px;
-    margin:5px;
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#0099ff;
+color:white;
+font-size:16px;
+margin:5px;
 }
 
 #map{
-    width:100%;
-    height:calc(100vh - 320px);
+width:100%;
+height:calc(100vh - 300px);
 }
 
-#info{
-    margin-top:10px;
+#lobbyPanel{
+padding:15px;
+background:#222;
+}
+
+#playersList{
+margin-top:10px;
+}
+
+.playerCard{
+background:#333;
+padding:10px;
+margin:5px;
+border-radius:8px;
+}
+
+.roleButton{
+background:#555;
+margin-left:10px;
+}
+
+#foundButton{
+position:fixed;
+bottom:20px;
+right:20px;
+background:red;
+display:none;
+z-index:9999;
+}
+
+#countdown{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+font-size:120px;
+background:rgba(0,0,0,0.7);
+z-index:99999;
 }
 
 #eliminatedScreen{
-    position:fixed;
-    inset:0;
-    background:black;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-    font-size:40px;
-    color:red;
+position:fixed;
+inset:0;
+background:black;
+display:none;
+justify-content:center;
+align-items:center;
+font-size:50px;
+z-index:99999;
+color:gray;
 }
