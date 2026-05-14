@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+}
+
+#menu {
+    padding: 15px;
+    background: #222;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background: #00aaee;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+#map {
+    width: 100%;
+    height: calc(100vh - 120px);
+}
